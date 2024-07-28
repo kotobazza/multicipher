@@ -1,0 +1,2 @@
+from .PrimeGeneration import generate_random_prime_number
+from .RandomGeneration import generate_random_number
