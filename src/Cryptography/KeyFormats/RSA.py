@@ -1,5 +1,5 @@
 from ..Random import generate_random_number, generate_random_prime_number
-from ..Math import fast_power, extended_euclidean_algorithm
+from ..Math import fast_power, extended_euclidean_algorithm, base64zlibdecode, base64zlibencode
 from pydantic import BaseModel
 
 
@@ -46,21 +46,12 @@ class RSAPrivateKey:
     def decrypt_number(self, message: int):
         return fast_power(abs(message), self.__private_part, self.modulus)
 
-    def decrypt_string_sample(self, message: str):
-        '''
-            Является sample-методом. Ужасно работает
-            Для переработки надо построить хеш-функцию
-        '''
-        symbols = message.split(" ")
-        string = ""
-        for symbol in symbols:
-            try:
-                string += chr(self.decrypt_number(int(symbol)))
-            except ValueError:
-                raise Exception(f"Can't decrypt. Message has wrong symbols: {symbol}")
-        return string
+    def decrypt_string(self, message:int):
+        encoded = self.decrypt_number(message)
+        return base64zlibdecode(encoded)
+
     
-    
+#TODO нужно добавить определение encode-decode алгоритма из сообщения. Можно с помощью объекта шифра, как в ECDSA
     
 
 class RSAPublicKey(BaseModel):
@@ -72,13 +63,9 @@ class RSAPublicKey(BaseModel):
         return fast_power(abs(message), self.public_part, self.modulus)
 
 
-    def encrypt_string_sample(self, message: str):
-        '''
-            Является sample-методом. Ужасно работает
-            Для переработки надо построить хеш-функцию
-        '''
-        symbols = []
-        for symbol in message:
-            symbol_order = ord(symbol)
-            symbols.append(str(self.encrypt_number(symbol_order)))
-        return " ".join(symbols)
+    def encrypt_string(self, message:str):
+        encoded = base64zlibencode(message)
+        return self.encrypt_number(encoded)
+    
+    def __str__(self):
+        return f"RSAPublicKey(public_part={self.public_part}, modulus={self.modulus})"
