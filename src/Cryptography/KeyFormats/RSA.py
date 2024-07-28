@@ -1,6 +1,7 @@
-from Cryptography.Random import generate_random_number, generate_random_prime_number
-from Cryptography.Math import fast_power, extended_euclidean_algorithm
+from ..Random import generate_random_number, generate_random_prime_number
+from ..Math import fast_power, extended_euclidean_algorithm
 from pydantic import BaseModel
+
 
 
 

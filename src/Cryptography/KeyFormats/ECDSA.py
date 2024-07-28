@@ -1,6 +1,6 @@
 from ..Random import generate_random_number, generate_random_prime_number
-from ..Math import extended_euclidean_algorithm, fast_power, EllipticCurve, EllipticCurvePoint
-import hashlib
+from ..Math import extended_euclidean_algorithm, fast_power, EllipticCurve, EllipticCurvePoint, sha224hash
+
 from pydantic import BaseModel
 
 
@@ -60,11 +60,8 @@ class ECDSAPrivateKey:
         self.private_key = generate_random_number(3, self.q)
         self.public_key = self.private_key * self.generation_point
 
-    def sign(self, signable:str):
-        m = hashlib.sha224()
-        m.update(signable.encode("utf-8"))
-        hashed = int(m.hexdigest(), 16)
-
+    def sign(self, signable:str, algorithm = sha224hash):
+        hashed = algorithm(signable)
         signature = self.__sing_sha224hash(hashed)
 
         return SignedMessage(message=signable, signature=signature)
