@@ -1,14 +1,9 @@
-from Cryptography.KeyFormats.RSA import RSAPrivateKey
+from Cryptography.KeyFormats import Secp256k1PrivateKey
 
 
+a = Secp256k1PrivateKey()
 
-privatekey = RSAPrivateKey(1024)
+b = a.publickey
 
-pubkey = privatekey.publickey
-
-print(pubkey)
-print(pubkey.json())
-
-message="HELLO"
-enc = pubkey.encrypt_string(message)
-print(privatekey.decrypt_string(enc))
+print(b)
+print(b.json())
